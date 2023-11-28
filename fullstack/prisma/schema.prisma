@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk Barang
+model Barang {
+  KodeBarang  String @id
+  NamaBarang  String
+  Satuan      String
+  HargaSatuan Float
+  Stok        Int
+
+  // Menambahkan field relasi ke BarangNota
+  barangNota BarangNota[]
+}
+
+// Model untuk Kasir
+model Kasir {
+  KodeKasir String @id
+  Nama      String
+  HP        String
+}
+
+// Model untuk Tenan
+model Tenan {
+  KodeTenan String @id
+  NamaTenan String
+  HP        String
+}
+
+// Model untuk Nota
+model Nota {
+  KodeNota      String   @id
+  KodeTenan     String
+  KodeKasir     String
+  TglNota       DateTime
+  JamNota       DateTime
+  JumlahBelanja Float
+  Diskon        Float
+  Total         Float
+
+  // Menambahkan field relasi ke BarangNota
+  barangNota BarangNota[]
+}
+
+// Model untuk BarangNota
+model BarangNota {
+  KodeNota     String
+  KodeBarang   String
+  JumlahBarang Int
+  HargaSatuan  Float
+  Jumlah       Float
+  nota         Nota   @relation(fields: [KodeNota], references: [KodeNota])
+  barang       Barang @relation(fields: [KodeBarang], references: [KodeBarang])
+
+  @@id([KodeNota, KodeBarang])
+}
