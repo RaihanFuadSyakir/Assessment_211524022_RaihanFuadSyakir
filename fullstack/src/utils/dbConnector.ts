@@ -1,10 +1,11 @@
 // db.js
 
 import { Barang, BarangNota, Kasir, Nota, Tenan } from "@prisma/client";
+import { getPrismaInstance } from "./prismaInstance";
 
 const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient();
+const prisma = getPrismaInstance();
 
 // Function to create a new Barang
 export const createBarang = async (data: Barang) => {
