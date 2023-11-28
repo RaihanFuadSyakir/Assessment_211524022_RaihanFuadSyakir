@@ -11,9 +11,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import DeleteBarang from '@/components/barang/DeleteBarang';
+import Button from '@mui/material/Button';
+import EditIcon from '@mui/icons-material/Edit';
 export default function BarangPage() {
     const [items, setItems] = useState<Barang[]>([]);
-
+    const [isEdit,setEdit] = useState(false);
+    const [arrNum,setArrNum] = useState(-1);
     useEffect(() => {
         axios.get('/api/barang')
             .then((res: AxiosResponse<dataResponse<Barang[]>>) => {
@@ -22,10 +26,11 @@ export default function BarangPage() {
             .catch((err_res: AxiosError<dataResponse<Barang[]>>) => {
                 console.log(JSON.stringify(err_res.response?.data.data));
             })
-    })
+    },[])
+    
     return (
         <div className='flex flex-row'>
-            <CreateBarang setListBarang={setItems} listBarang={items} />
+            <CreateBarang setListBarang={setItems} listBarang={items} index={arrNum} isEdit={isEdit} setEdit={setEdit}/>
             <div className='m-4 flex flex-row flex-wrap'>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -37,6 +42,7 @@ export default function BarangPage() {
                                 <TableCell align="center">Harga Satuan</TableCell>
                                 <TableCell align="center">Satuan</TableCell>
                                 <TableCell align="center">Stok</TableCell>
+                                <TableCell align="center">Aksi</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -51,6 +57,16 @@ export default function BarangPage() {
                                     <TableCell align="center">{row.HargaSatuan}</TableCell>
                                     <TableCell align="center">{row.Satuan}</TableCell>
                                     <TableCell align="center">{row.Stok}</TableCell>
+                                    <TableCell align="center" className='flex flex-col'>
+                                        <DeleteBarang listBarang={items} index={index} setListBarang={setItems}/>
+                                        <Button 
+                                        variant="outlined" 
+                                        startIcon={<EditIcon />} 
+                                        onClick={()=>{setEdit(true);setArrNum(index)}}
+                                        className='bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500'>
+                                            Edit
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
