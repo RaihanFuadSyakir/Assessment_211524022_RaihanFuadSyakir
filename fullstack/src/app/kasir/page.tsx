@@ -1,7 +1,6 @@
 "use client"
-import CreateBarang from '@/components/barang/CreateBarang';
 import { dataResponse } from '@/utils/dataInterface';
-import { Barang, Kasir } from '@prisma/client'
+import { Kasir } from '@prisma/client'
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react'
 import Table from '@mui/material/Table';
