@@ -4,11 +4,15 @@ import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import { Barang } from '@prisma/client'
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 interface ListBarang {
     setListBarang: React.Dispatch<React.SetStateAction<Barang[]>>;
+    listBarang:Barang[];
+    index : number;
+    isEdit:boolean;
+    setEdit : React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function CreateBarang({ setListBarang }: ListBarang) {
+export default function CreateBarang({ setListBarang ,listBarang,index,isEdit,setEdit}: ListBarang) {
     const [newBarang, setBarang] = useState<Barang>({
         KodeBarang: '',
         NamaBarang: '',
@@ -33,9 +37,21 @@ export default function CreateBarang({ setListBarang }: ListBarang) {
                 console.log(JSON.stringify(err_res.response?.data));
             })
     }
+    function UpdateBarang() {
+        axios.put(`/api/barang?id=${listBarang[index].KodeBarang}`,newBarang)
+        .then((res : AxiosResponse<dataResponse<Barang>>)=>{
+            const newList = listBarang;
+            newList[index] = res.data.data!;
+            setListBarang(newList);
+            setEdit(false);
+        })
+        .catch((err_res)=>{
+            console.log(JSON.stringify(err_res));
+        })
+    }
     return (
         <div className='m-4 p-2 flex flex-col w-1/3 bg-orange-100 rounded'>
-            <div>Form tambah barang</div>
+            <div>{isEdit ? "Form update barang" : "Form tambah barang"}</div>
             <div className='flex flex-col'>
                 <TextField
                     label="Kode Barang"
@@ -89,7 +105,13 @@ export default function CreateBarang({ setListBarang }: ListBarang) {
                     margin="normal"
                 />
             </div>
-            <Button variant="contained" onClick={addBarang} className='bg-blue-600'>Tambah Barang</Button>
+            {isEdit ? (
+                <Button variant="contained" onClick={UpdateBarang} className='bg-blue-600'>Edit Barang</Button>
+            ):(
+                <Button variant="contained" onClick={addBarang} className='bg-blue-600'>Tambah Barang</Button>
+            )}
+            
+            
         </div>
     );
 }
