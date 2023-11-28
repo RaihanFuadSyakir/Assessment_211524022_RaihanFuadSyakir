@@ -1,9 +1,10 @@
+"use client"
 import React, { useState } from 'react';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import { dataResponse } from '@/utils/dataInterface';
 import { Button } from '@mui/material';
 import TextField from '@mui/material/TextField';
-import { Kasir } from '@prisma/client';
+import { Kasir} from '@prisma/client';
 
 interface ListKasir {
     setListKasir: React.Dispatch<React.SetStateAction<Kasir[]>>;
